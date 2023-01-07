@@ -4,6 +4,8 @@ meta:
   endian: le
   imports:
     - ../common/common
+doc: |
+  # LU Zone File Format
 seq:
   - id: file_version
     type: u4
@@ -12,11 +14,8 @@ seq:
     if: file_version >= 36
   - id: zone_id
     type: u4
-  - id: player_start_pos
-    type: common::vector3
-    if: file_version >= 38
-  - id: player_start_rot
-    type: common::quaternion
+  - id: player_start
+    type: common::transform3
     if: file_version >= 38
   - id: num_scene_files
     type:
@@ -45,14 +44,17 @@ seq:
   - id: zone_transition_data
     type: transition_data
     if: file_version >= 32
-  - id: path_chunk_size
-    type: u4
-    if: file_version >= 35
-  - id: path_chunk
-    type: path_chunk
-    size: path_chunk_size
+  - id: paths
+    type: path_data
     if: file_version >= 35
 types:
+  path_data:
+    seq:
+      - id: path_chunk_size
+        type: u4
+      - id: path_chunk
+        type: path_chunk
+        size: path_chunk_size
   scene:
     seq:
       - id: scene_file_name
@@ -72,14 +74,8 @@ types:
       - id: unknown2
         type: f4
         if: _root.file_version == 33
-      - id: scene_color_r
-        type: u1
-        if: _root.file_version >= 33
-      - id: scene_color_g
-        type: u1
-        if: _root.file_version >= 33
-      - id: scene_color_b
-        type: u1
+      - id: scene_color
+        type: common::u1_color
         if: _root.file_version >= 33
   boundary_info:
     seq:
