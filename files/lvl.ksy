@@ -242,6 +242,8 @@ types:
       - id: config_size
         type: u4
       - id: config
+        type: str
+        encoding: utf-16le
         size: config_size * 2
       - id: render_technique
         type: render_technique
